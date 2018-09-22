@@ -1,19 +1,15 @@
-FROM alpine:3.7
-MAINTAINER wiserain
+FROM armhf/alpine
+MAINTAINER bren
 
-# install frolvlad/alpine-python3
-RUN apk add --no-cache python3 && \
-	python3 -m ensurepip && \
-	rm -r /usr/lib/python*/ensurepip && \
-	pip3 install --upgrade pip setuptools
+RUN apk add --update \
+  tzdata \
+  python \
+  py-pip \
+  ca-certificates \
+  && pip install --no-cache-dir --disable-pip-version-check flexget transmissionrpc \
+  && rm -rf /var/cache/apk/*
 
-# install flexget
-RUN apk --no-cache add ca-certificates tzdata && \
-	pip3 install --upgrade --force-reinstall --ignore-installed \
-		transmissionrpc python-telegram-bot flexget && \
-	rm -r /root/.cache
-
-# copy local files
+# Copy local files
 COPY files/ /
 
 # add default volumes
